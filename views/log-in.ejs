@@ -11,20 +11,26 @@
                     <h1 class="text-6xl font-bold text-green-500"><%= title %></h1>
                 </div>
 
-                <form id="logInForm">  
+                <form id="logInForm" method="post" action="/log-in">  
+                    <label class="text-green-800 text-3xl" for="email">Email address:</label>
                     <input
-                            class="shadow mb-6 appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                             leading-tight focus:outline-none focus:shadow-outline"
-                            type="email" placeholder="Email" name="email" required>
-
+                            id="email" type="text" placeholder="yourName@example.com" name="email" value="<%= values.email %>">
+                            <% if(validationMessage.email) { %>
+                                <span class="text-red-500 text-base"><%= validationMessage.email %></span> <br>
+                            <%  }   %>
+                    <label class="mt-2 text-green-800 text-3xl" for="password">Password:</label>
                     <input
-                            class="shadow mb-6 appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                             leading-tight focus:outline-none focus:shadow-outline"
-                            type="password" placeholder="Password" name="password" required>
-
+                            id="password" type="password" placeholder="Enter password" name="password">
+                            <% if(validationMessage.password) { %>
+                                <span class="text-red-500 text-base"><%= validationMessage.password %></span> <br>
+                            <%  }   %>
                     <div>
                         <button type="submit"
-                            class="flex w-full justify-center rounded-md border border-transparent 
+                            class="flex mt-6 w-full justify-center rounded-md border border-transparent 
                             bg-green-500 py-3 px-6 font-semibold text-3xl text-white shadow-lg 
                             hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 
                             focus:ring-offset-2">Log in
@@ -36,5 +42,4 @@
         </div>
     </div>
 </body>
-
     

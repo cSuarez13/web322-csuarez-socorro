@@ -14,6 +14,7 @@ const path = require("path");
 const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
 const mealkitUtil = require("./modules/mealkit-util");
+const validationUtil = require("./modules/validation-util");
 
 // Set up express
 const app = express();
@@ -52,9 +53,14 @@ app.get("/sign-up", (req, res) => {
         includeMainCSS: true
     });
 });
+
 app.get("/log-in", (req, res) => {
     res.render("log-in", {
         title: "Login",
+        validationMessage: {},
+        values: {
+            email: ""
+        },
         includeMainCSS: true});
 });
 
@@ -67,6 +73,38 @@ app.get("/welcome", (req, res) => {
         },
         includeMainCSS: true});
 });
+
+app.post("/log-in", (req, res) => {
+    const { email, password } = req.body;
+    let validationMessage = {};
+    let passedValidation = true;
+
+    if(!validationUtil.notEmpty(email)){
+        validationMessage.email = "The email address is required.";
+        passedValidation = false;
+    }
+    if(!validationUtil.notEmpty(password)) {
+        validationMessage.password = "Please fill out the password field.";
+        passedValidation = false;
+    }
+    if(!passedValidation) {
+        res.render("log-in", {
+            title: "Login",
+            validationMessage,
+            values: req.body,
+            includeMainCSS: true});
+    }
+    else{
+        res.render("welcome", {
+            title: "Welcome",
+            values: {
+                firstName: "",
+                lastName: "",
+            },
+            includeMainCSS: true});
+    }
+});
+
 
 // This use() will not allow requests to go beyond it
 // so we place it at the end of the file, after the other routes.
