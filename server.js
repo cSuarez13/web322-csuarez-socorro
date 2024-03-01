@@ -16,6 +16,10 @@ const expressLayouts = require('express-ejs-layouts');
 const mealkitUtil = require("./modules/mealkit-util");
 const validationUtil = require("./modules/validation-util");
 
+//Set up dotev
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config/keys.env" });
+
 // Set up express
 const app = express();
 
@@ -50,6 +54,12 @@ app.get("/on-the-menu", (req, res) => {
 app.get("/sign-up", (req, res) => {
     res.render("sign-up", {
         title: "Sign Up",
+        validationMessage: {},
+        values: {
+            firstName: "",
+            lastName: "",
+            email: ""
+        },
         includeMainCSS: true
     });
 });
@@ -105,7 +115,76 @@ app.post("/log-in", (req, res) => {
     }
 });
 
+app.post("/sign-up", (req, res) => {
+    const { firstName, lastName, email, password } = req.body;
+    let validationMessage = {};
+    let passedValidation = true;
 
+    if(!validationUtil.notEmpty(firstName)){
+        validationMessage.firstName = "Please enter your first name.";
+        passedValidation = false;
+    }
+    if(!validationUtil.notEmpty(lastName)){
+        validationMessage.lastName = "Please enter your last name.";
+        passedValidation = false;
+    }
+    if(!validationUtil.notEmpty(email)){
+        validationMessage.email = "The email address is required.";
+        passedValidation = false;
+    }
+    else if(!validationUtil.validEmail(email)){
+        validationMessage.email = "Please enter a valid email address."
+        passedValidation = false;
+    }
+    if(!validationUtil.notEmpty(password)) {
+        validationMessage.password = "Please fill out the password field.";
+        passedValidation = false;
+    }
+    else if(!validationUtil.validPassword(password)) {
+        validationMessage.password = "Password must be 8-12 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one symbol.";
+        passedValidation = false;
+    }
+    if(!passedValidation) {
+        res.render("sign-up", {
+            title: "Sign up",
+            validationMessage,
+            values: req.body,
+            includeMainCSS: true});
+    }
+    else{
+        const sgMail = require("@sendgrid/mail");
+        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+
+        const msg = {
+            to: email,
+            from: "csuarez-socorro@myseneca.ca",
+            subject: "Welcome to Taco 'bout it!!!",
+            html: `
+              <p>Hello ${firstName} ${lastName},</p>
+              <p>I am glad to welcome you to our website TACO 'BOUT IT!!</p>
+              <p>Have a great day,</p>
+              <p>Claudia Suarez.</p>
+            `
+          };
+
+        sgMail.send(msg)
+            .then(() => {
+                res.render("welcome", {
+                    title: "WELCOME",
+                    values: req.body,
+                    includeMainCSS: true});
+            })
+            .catch(err => {
+                console.log(err);
+                res.render("sign-up", {
+                    title: "Sign Up",
+                    validationMessage,
+                    values: req.body,
+                    includeMainCSS: true});
+            })
+
+    }
+});
 // This use() will not allow requests to go beyond it
 // so we place it at the end of the file, after the other routes.
 // This function will catch all other requests that don't match

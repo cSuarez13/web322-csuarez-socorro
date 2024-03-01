@@ -6,33 +6,47 @@
                 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
             </div>
             <div class="text-white relative px-6 py-12 bg-gradient-to-l from-amber-300 to-white shadow-lg sm:rounded-3xl sm:p-20">
-
                 <div class="text-center pb-8">
                     <h1 class="text-6xl font-bold text-green-500"><%= title %></h1>
                 </div>
 
-                <form id="logInForm">  
+                <form id="logInForm" method="post" action="/sign-up">  
+                    <label class="text-green-800 text-3xl" for="firstName">First Name:</label>
                     <input
-                            class="shadow mb-6 appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                             leading-tight focus:outline-none focus:shadow-outline"
-                            type="text" placeholder="First Name" name="fname" required>
+                            type="text" placeholder="Enter your first name" name="firstName" id="firstName" value="<%= values.firstName %>">
+                            <% if(validationMessage.firstName) { %>
+                                <span class="text-red-500 text-base"><%= validationMessage.firstName %></span> <br>
+                            <%  }   %>
+                    <label class="mt-2 text-green-800 text-3xl" for="lastName">Last Name:</label>
                     <input
-                            class="shadow mb-6 appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                             leading-tight focus:outline-none focus:shadow-outline"
-                            type="text" placeholder="Last Name" name="lname" required>
+                            type="text" placeholder="Enter your last name" name="lastName" id="lastName" value="<%= values.lastName %>">
+                            <% if(validationMessage.lastName) { %>
+                                <span class="text-red-500 text-base"><%= validationMessage.lastName %></span> <br>
+                            <%  }   %>
+                    <label class="mt-2 text-green-800 text-3xl" for="email">Email address:</label>
                     <input
-                            class="shadow mb-6 appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                             leading-tight focus:outline-none focus:shadow-outline"
-                            type="email" placeholder="Email" name="email" required>
-
+                            type="text" placeholder="yourName@example.com" name="email" id="email" value="<%= values.email %>">
+                            <% if(validationMessage.email) { %>
+                                <span class="text-red-500 text-base"><%= validationMessage.email %></span> <br>
+                            <%  }   %>
+                    <label class="mt-2 text-green-800 text-3xl" for="password">Password:</label>
                     <input
-                            class="shadow mb-6 appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                             leading-tight focus:outline-none focus:shadow-outline"
-                            type="password" placeholder="Password" name="password" required>
+                            type="password" placeholder="Create your password" name="password" id="password">
+                            <% if(validationMessage.password) { %>
+                                <span class="text-red-500 text-base"><%= validationMessage.password %></span> <br>
+                            <%  }   %>
 
                     <div>
                         <button type="submit"
-                            class="flex w-full justify-center rounded-md border border-transparent 
+                            class="mt-6 flex w-full justify-center rounded-md border border-transparent 
                             bg-green-500 py-3 px-6 font-semibold text-3xl text-white shadow-lg 
                             hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 
                             focus:ring-offset-2">Sign Up
@@ -44,4 +58,3 @@
         </div>
     </div>
 </body>
-
