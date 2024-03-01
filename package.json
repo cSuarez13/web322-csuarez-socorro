@@ -1,0 +1,28 @@
+{
+  "name": "a1",
+  "version": "1.0.0",
+  "description": "Food Website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "tw:build": "tailwindcss build -i ./assets/css/tailwind.css -o ./assets/css/main.css"
+  },
+  "author": "Claudia Suarez",
+  "license": "ISC",
+  "keywords": [
+    "web",
+    "development",
+    "basic",
+    "express"
+  ],
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "tailwindcss": "^3.4.1"
+  }
+}

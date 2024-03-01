@@ -1,0 +1,20 @@
+<body>
+    <div class="m-10">
+    <h1 class="text-8xl font-bold text-lime-500"><%= title %></h1>
+    <hr class="fade" />
+    <% mealsByCat.forEach(category => { %>
+        <section>
+            <hr class="fade" />
+            <h2 class="text-5xl font-semibold"><%= category.categoryName %></h2>
+            <hr class="fade" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <% category.mealKits.forEach(meal => { %>
+                    <div class="meal-kit" style="width:fit-content;">
+                    <%- include('./partials/mealkit.ejs', { meal: meal }) %>
+                </div>
+                <% }); %>
+            </div>
+        </section>
+    <% }); %>
+</div>
+</body>
