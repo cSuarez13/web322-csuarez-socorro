@@ -15,14 +15,18 @@ const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
 const mealkitUtil = require("./modules/mealkit-util");
 
+// Set up express
 const app = express();
-
 
 app.use(express.static(path.join(__dirname, "/assets")));
 
+// Set up EJS
 app.set("view engine", "ejs");
 app.set("layout", "layouts/main");
 app.use(expressLayouts);
+
+// Set up body-parser
+app.use(express.urlencoded({ extended: false }));
 
 // Add your routes here
 // e.g. app.get() { ... }
@@ -51,6 +55,16 @@ app.get("/sign-up", (req, res) => {
 app.get("/log-in", (req, res) => {
     res.render("log-in", {
         title: "Login",
+        includeMainCSS: true});
+});
+
+app.get("/welcome", (req, res) => {
+    res.render("welcome", {
+        title: "Welcome",
+        values: {
+            firstName: "",
+            lastName: "",
+        },
         includeMainCSS: true});
 });
 
