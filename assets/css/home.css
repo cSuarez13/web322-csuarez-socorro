@@ -78,7 +78,6 @@ a.link--nav:hover {
   width: 100%; /* Make the image fill the container */
   height: 400px;
   filter: brightness(70%); /* Adjust image brightness for a subtle overlay effect */
-  z-index: 1;
 }
 
 .text-overlay {
