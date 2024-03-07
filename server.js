@@ -157,7 +157,7 @@ app.post("/sign-up", (req, res) => {
 
         const msg = {
             to: email,
-            from: "csuarez-socorro@myseneca.ca",
+            from: "clausuarez99@gmail.com",
             subject: "Welcome to Taco 'bout it!!!",
             html: `
               <p>Hello ${firstName} ${lastName},</p>

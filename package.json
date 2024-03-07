@@ -11,10 +11,9 @@
   "author": "Claudia Suarez",
   "license": "ISC",
   "keywords": [
-    "web",
-    "development",
-    "basic",
-    "express"
+    "taco",
+    "food",
+    "mealkit"
   ],
   "dependencies": {
     "@sendgrid/mail": "^8.1.1",
