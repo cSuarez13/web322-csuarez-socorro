@@ -31,58 +31,14 @@ app.set("layout", "layouts/main");
 app.use(expressLayouts);
 
 // Set up body-parser
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
-// Add your routes here
-// e.g. app.get() { ... }
-app.get("/", (req, res) => {
-    res.render("home", {
-        title: "Home Page",
-        allMeals: mealkitUtil.getAllMealKits(),
-        includeMainCSS: false
-    });
-});
+// Load the controllers
+const generalController = require("./controllers/generalController");
+const mealkitsController = require("./controllers/mealkitsController");
 
-app.get("/on-the-menu", (req, res) => {
-    res.render("on-the-menu", {
-        title: "Menu",
-        mealsByCat: mealkitUtil.getMealKitsByCategory(),
-        includeMainCSS: true
-    });
-});
-
-app.get("/sign-up", (req, res) => {
-    res.render("sign-up", {
-        title: "Sign Up",
-        validationMessage: {},
-        values: {
-            firstName: "",
-            lastName: "",
-            email: ""
-        },
-        includeMainCSS: true
-    });
-});
-
-app.get("/log-in", (req, res) => {
-    res.render("log-in", {
-        title: "Login",
-        validationMessage: {},
-        values: {
-            email: ""
-        },
-        includeMainCSS: true});
-});
-
-app.get("/welcome", (req, res) => {
-    res.render("welcome", {
-        title: "Welcome",
-        values: {
-            firstName: "",
-            lastName: "",
-        },
-        includeMainCSS: true});
-});
+app.use("/", generalController);
+app.use("/on-the-menu", mealkitsController);
 
 app.post("/log-in", (req, res) => {
     const { email, password } = req.body;
