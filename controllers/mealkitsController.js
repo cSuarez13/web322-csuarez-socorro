@@ -11,6 +11,16 @@
 **************************************************************************************/
 const express = require("express");
 const router = express.Router();
+const mealkitUtil = require("../modules/mealkit-util");
+
+// On The Menu Page route
+router.get("/on-the-menu", (req, res) => {
+    res.render("mealkits/on-the-menu", {
+        title: "Menu",
+        mealsByCat: mealkitUtil.getMealKitsByCategory(),
+        includeMainCSS: true
+    });
+});
 
 router.get("/list", (req, res) => {
     if(req.session.user && req.session.role === "clerk"){

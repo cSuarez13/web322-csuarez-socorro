@@ -216,15 +216,6 @@ router.post("/log-in", (req, res) => {
     }
 });
 
-// On The Menu Page route
-router.get("/on-the-menu", (req, res) => {
-    res.render("general/on-the-menu", {
-        title: "Menu",
-        mealsByCat: mealkitUtil.getMealKitsByCategory(),
-        includeMainCSS: true
-    });
-});
-
 // Welcome Page route
 router.get("/welcome", (req, res) => {
     res.render("general/welcome", {
