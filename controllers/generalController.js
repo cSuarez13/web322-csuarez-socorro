@@ -141,13 +141,14 @@ router.get("/log-in", (req, res) => {
         title: "Login",
         validationMessage: {},
         values: {
+            role: "clerk",
             email: ""
         },
         includeMainCSS: true});
 });
 
 router.post("/log-in", (req, res) => {
-    const { email, password } = req.body;
+    const { role, email, password } = req.body;
     let validationMessage = {};
     let passedValidation = true;
 
@@ -176,15 +177,11 @@ router.post("/log-in", (req, res) => {
                         req.session.user = user;
                         console.log("User signed in");
 
-                        // res.render("general/welcome", {
-                        //     title: "Welcome",
-                        //     values: {
-                        //         firstName: user.firstName,
-                        //         lastName: user.lastName,
-                        //     },
-                        //     includeMainCSS: true});
-
-                        res.redirect('/');
+                        if(role === "clerk"){
+                            res.redirect('/mealkits/list');
+                        } else if (role === 'customer') {
+                            res.redirect('/cart');
+                        }
                     }
                     else{
                         validationMessage.password = "Incorrect password."
@@ -231,6 +228,15 @@ router.get("/welcome", (req, res) => {
             lastName: "",
         },
         includeMainCSS: true});
+});
+
+// Customer route
+router.get("/cart", (req, res) => {
+    try{
+        res.send("Hello, customer.");}
+    catch (error) {
+        console.log(error);
+    }
 });
 
 // LogOut route

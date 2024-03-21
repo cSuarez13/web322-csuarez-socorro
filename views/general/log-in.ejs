@@ -28,6 +28,29 @@
                             <% if(validationMessage.password) { %>
                                 <span class="text-red-500 text-base"><%= validationMessage.password %></span> <br>
                             <%  }   %>
+  
+                    <label class="mt-2 text-green-800 text-3xl" for="role">Role:</label>
+                    <div class="shadow appearance-none rounded w-full py-3 px-4 text-2xl text-gray-800 
+                    leading-tight focus:outline-none focus:shadow-outline flex gap-10">
+
+                        <div class="inline-flex items-center text-green-600 text-2xl font-bold">
+                            <input type="radio" id="roleClerk" name="role" value="clerk" <% if(values.role === 'clerk') { %> checked <% } %>
+                            class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 
+                            text-gray-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 
+                            before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity 
+                            checked:border-gray-900 checked:before:bg-gray-900 hover:before:opacity-15 mr-2"
+                            >Data Entry Clerk
+                            <input type="radio" id="roleCustomer" name="role" value="customer" <% if(values.role === 'customer') { %> checked <% } %>
+                            class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 
+                            text-gray-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 
+                            before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity 
+                            checked:border-gray-900 checked:before:bg-gray-900 hover:before:opacity-15 mr-2 ml-6"
+                            >Customer
+                        </div>
+                
+                    </div>       
+                          
+
                     <div>
                         <button type="submit"
                             class="flex mt-6 w-full justify-center rounded-md border border-transparent 
@@ -36,7 +59,6 @@
                             focus:ring-offset-2">Log in
                         </button>
                     </div>
-    
                 </form>
             </div>
         </div>

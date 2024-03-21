@@ -12,11 +12,8 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.render("mealkits/mealkits", {
-        title: "MealKits",
-        includeMainCSS: true
-    });
+router.get("/list", (req, res) => {
+    res.send("Hello, clerk");
 });
 
 module.exports = router;
