@@ -14,7 +14,10 @@ const router = express.Router();
 
 router.get("/list", (req, res) => {
     if(req.session.user && req.session.role === "clerk"){
-        res.send("Hello, clerk.");
+        res.render("mealkits/list", {
+            user: req.session.user,
+            layout: "layouts/main"
+        });
     }
     else{
         res.status(401).render("../views/general/error", {

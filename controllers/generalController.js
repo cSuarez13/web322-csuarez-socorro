@@ -16,12 +16,17 @@ const validationUtil = require("../modules/validation-util");
 const userModel = require("../models/userModel");
 const bcryptjs = require("bcryptjs");
 
+router.use((req, res, next) => {
+    res.locals.role = req.session.role;
+    next();
+});
+
 // Home Page route
 router.get("/", (req, res) => {
     res.render("general/home", {
         title: "Home Page",
         allMeals: mealkitUtil.getAllMealKits(),
-        includeMainCSS: false
+        includeMainCSS: false,
     });
 });
 
@@ -235,7 +240,10 @@ router.get("/welcome", (req, res) => {
 // Customer route
 router.get("/cart", (req, res) => {
     if (req.session.user && req.session.role === "customer") {
-        res.send("Hello, customer.");
+        res.render("general/cart", {
+            user: req.session.user,
+            layout: "layouts/main"
+        });
     } else {
         res.status(401).render("general/error", {
             message: "You are not authorized to view this page.",
