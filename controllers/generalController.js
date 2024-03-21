@@ -233,4 +233,11 @@ router.get("/welcome", (req, res) => {
         includeMainCSS: true});
 });
 
+// LogOut route
+router.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
+
 module.exports = router;
