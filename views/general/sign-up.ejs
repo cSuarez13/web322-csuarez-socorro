@@ -33,7 +33,7 @@
                             leading-tight focus:outline-none focus:shadow-outline"
                             type="text" placeholder="yourName@example.com" name="email" id="email" value="<%= values.email %>">
                             <% if(validationMessage.email) { %>
-                                <span class="text-red-500 text-base"><%= validationMessage.email %></span> <br>
+                                <span class="text-red-500 text-base mb-5"><%= validationMessage.email %></span> <br>
                             <%  }   %>
                     <label class="mt-2 text-green-800 text-3xl" for="password">Password:</label>
                     <input

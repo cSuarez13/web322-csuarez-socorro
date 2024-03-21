@@ -9,7 +9,7 @@
 * Course/Section: WEB322/NEE
 *
 **************************************************************************************/
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 
 // Create a Schema 
@@ -32,7 +32,27 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+userSchema.pre("save", function (next ) {
+    let user = this;
+
+    // Generate a unique SALT.
+    bcryptjs.genSalt()
+        .then(salt => {
+            bcryptjs.hash(user.password, salt)
+                .then(hashedPwd => {
+                    user.password = hashedPwd;
+                    next();
+                })
+                .catch(err => {
+                    console.log(`Error occurred when hashing ... ${err}`);
+                });
+        })
+        .catch(err => {
+            console.log(`Error occurred when salting ... ${err}`);
+        });
+});
+
 // Create a model
-const userModel = mongoose.model("user", userSchema);
+const userModel = mongoose.model("users", userSchema);
 
 module.exports = userModel;

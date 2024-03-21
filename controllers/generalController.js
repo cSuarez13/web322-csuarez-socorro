@@ -75,52 +75,64 @@ router.post("/sign-up", (req, res) => {
             includeMainCSS: true});
     }
     else{
-        const newUser = new userModel({ firstName, lastName, email, password });
+        const existingUser = userModel.findOne({ email });
 
-        newUser.save()
-        .then(userSaved => {
-            console.log(`User ${userSaved.firstName} has been added to the database.`);
-
-        const sgMail = require("@sendgrid/mail");
-        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
-
-        const msg = {
-            to: email,
-            from: "clausuarez99@gmail.com",
-            subject: "Welcome to Taco 'bout it!!!",
-            html: `
-              <p>Hello ${firstName} ${lastName},</p>
-              <p>I am glad to welcome you to our website TACO 'BOUT IT!!</p>
-              <p>Have a great day,</p>
-              <p>Claudia Suarez.</p>
-            `
-          };
-
-        sgMail.send(msg)
-            .then(() => {
-                res.render("general/welcome", {
-                    title: "WELCOME",
-                    values: req.body,
-                    includeMainCSS: true});
-            })
-            .catch(err => {
-                console.log(err);
-                res.render("general/sign-up", {
-                    title: "Sign Up",
-                    validationMessage,
-                    values: req.body,
-                    includeMainCSS: true});
-            })
-        })
-        .catch(err => {
-            console.log(`Error adding user to the database .. ${err}`)
-            validationMessage.password = "Something went wrong...please try again."
+        if (existingUser) {
+            validationMessage.email = "This email is already registered. Try a different one, or try logging in."
             res.render("general/sign-up", {
                 title: "Sign up",
                 validationMessage,
                 values: req.body,
                 includeMainCSS: true});
-        })
+        }
+        else{
+            const newUser = new userModel({ firstName, lastName, email, password });
+
+            newUser.save()
+            .then(userSaved => {
+                console.log(`User ${userSaved.firstName} has been added to the database.`);
+
+            const sgMail = require("@sendgrid/mail");
+            sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+
+            const msg = {
+                to: email,
+                from: "clausuarez99@gmail.com",
+                subject: "Welcome to Taco 'bout it!!!",
+                html: `
+                <p>Hello ${firstName} ${lastName},</p>
+                <p>I am glad to welcome you to our website TACO 'BOUT IT!!</p>
+                <p>Have a great day,</p>
+                <p>Claudia Suarez.</p>
+                `
+            };
+
+            sgMail.send(msg)
+                .then(() => {
+                    res.render("general/welcome", {
+                        title: "WELCOME",
+                        values: req.body,
+                        includeMainCSS: true});
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.render("general/sign-up", {
+                        title: "Sign Up",
+                        validationMessage,
+                        values: req.body,
+                        includeMainCSS: true});
+                })
+            })
+            .catch(err => {
+                console.log(`Error adding user to the database .. ${err}`)
+                validationMessage.password = "Something went wrong...please try again."
+                res.render("general/sign-up", {
+                    title: "Sign up",
+                    validationMessage,
+                    values: req.body,
+                    includeMainCSS: true});
+            })
+        }
     }
 });
 
