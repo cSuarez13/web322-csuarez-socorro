@@ -15,6 +15,7 @@ const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
 const mealkitUtil = require("./modules/mealkit-util");
 const validationUtil = require("./modules/validation-util");
+const mongoose = require("mongoose");
 
 //Set up dotev
 const dotenv = require("dotenv");
@@ -38,109 +39,8 @@ const generalController = require("./controllers/generalController");
 const mealkitsController = require("./controllers/mealkitsController");
 
 app.use("/", generalController);
-app.use("/on-the-menu", mealkitsController);
+app.use("/mealkits/", mealkitsController);
 
-app.post("/log-in", (req, res) => {
-    const { email, password } = req.body;
-    let validationMessage = {};
-    let passedValidation = true;
-
-    if(!validationUtil.notEmpty(email)){
-        validationMessage.email = "The email address is required.";
-        passedValidation = false;
-    }
-    if(!validationUtil.notEmpty(password)) {
-        validationMessage.password = "Please fill out the password field.";
-        passedValidation = false;
-    }
-    if(!passedValidation) {
-        res.render("log-in", {
-            title: "Login",
-            validationMessage,
-            values: req.body,
-            includeMainCSS: true});
-    }
-    else{
-        res.render("welcome", {
-            title: "Welcome",
-            values: {
-                firstName: "",
-                lastName: "",
-            },
-            includeMainCSS: true});
-    }
-});
-
-app.post("/sign-up", (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
-    let validationMessage = {};
-    let passedValidation = true;
-
-    if(!validationUtil.notEmpty(firstName)){
-        validationMessage.firstName = "Please enter your first name.";
-        passedValidation = false;
-    }
-    if(!validationUtil.notEmpty(lastName)){
-        validationMessage.lastName = "Please enter your last name.";
-        passedValidation = false;
-    }
-    if(!validationUtil.notEmpty(email)){
-        validationMessage.email = "The email address is required.";
-        passedValidation = false;
-    }
-    else if(!validationUtil.validEmail(email)){
-        validationMessage.email = "Please enter a valid email address."
-        passedValidation = false;
-    }
-    if(!validationUtil.notEmpty(password)) {
-        validationMessage.password = "Please fill out the password field.";
-        passedValidation = false;
-    }
-    else if(!validationUtil.validPassword(password)) {
-        validationMessage.password = "Password must be 8-12 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one symbol.";
-        passedValidation = false;
-    }
-    if(!passedValidation) {
-        res.render("sign-up", {
-            title: "Sign up",
-            validationMessage,
-            values: req.body,
-            includeMainCSS: true});
-    }
-    else{
-        const sgMail = require("@sendgrid/mail");
-        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
-
-        const msg = {
-            to: email,
-            from: "clausuarez99@gmail.com",
-            subject: "Welcome to Taco 'bout it!!!",
-            html: `
-              <p>Hello ${firstName} ${lastName},</p>
-              <p>I am glad to welcome you to our website TACO 'BOUT IT!!</p>
-              <p>Have a great day,</p>
-              <p>Claudia Suarez.</p>
-            `
-          };
-
-        sgMail.send(msg)
-            .then(() => {
-                res.render("welcome", {
-                    title: "WELCOME",
-                    values: req.body,
-                    includeMainCSS: true});
-            })
-            .catch(err => {
-                console.log(err);
-                res.render("sign-up", {
-                    title: "Sign Up",
-                    validationMessage,
-                    values: req.body,
-                    includeMainCSS: true});
-            })
-
-    }
-});
 // This use() will not allow requests to go beyond it
 // so we place it at the end of the file, after the other routes.
 // This function will catch all other requests that don't match
@@ -168,7 +68,15 @@ const HTTP_PORT = process.env.PORT || 8080;
 function onHttpStart() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
-  
-// Listen on port 8080. The default port for http is 80, https is 443. We use 8080 here
-// because sometimes port 80 is in use by other applications on the machine
-app.listen(HTTP_PORT, onHttpStart);
+
+// Connect to the mongodb
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
+    .then(() => {
+        console.log("Connected to the MongoDB database.");
+        // Listen on port 8080. The default port for http is 80, https is 443. We use 8080 here
+        // because sometimes port 80 is in use by other applications on the machine
+        app.listen(HTTP_PORT, onHttpStart);
+    })
+    .catch(err => {
+        console.log("Can't conect to the MongoDB: " + err);
+    })

@@ -9,16 +9,30 @@
 * Course/Section: WEB322/NEE
 *
 **************************************************************************************/
-const express = require("express");
-const router = express.Router();
-const mealkitUtil = require("../modules/mealkit-util");
+const { default: mongoose } = require("mongoose");
+const bcryptjs = require("bcryptjs");
 
-router.get("/on-the-menu", (req, res) => {
-    res.render("mealkits/on-the-menu", {
-        title: "Menu",
-        mealsByCat: mealkitUtil.getMealKitsByCategory(),
-        includeMainCSS: true
-    });
+// Create a Schema 
+const userSchema = new mongoose.Schema({
+    "firstName": {
+        type: String,
+        require: true
+    },
+    "lastName": {
+        type: String,
+        require: true
+    },
+    "email": {
+        type: String,
+        require: true,
+        unique: true},
+    "password": {
+        type: String,
+        require: true
+    },
 });
 
-module.exports = router;
+// Create a model
+const userModel = mongoose.model("user", userSchema);
+
+module.exports = userModel;

@@ -10,7 +10,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <% category.mealKits.forEach(meal => { %>
                     <div class="meal-kit" style="width:fit-content;">
-                    <%- include('./partials/mealkit.ejs', { meal: meal }) %>
+                    <%- include('../partials/mealkit.ejs', { meal: meal }) %>
                 </div>
                 <% }); %>
             </div>
