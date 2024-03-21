@@ -11,12 +11,10 @@
 **************************************************************************************/
 const express = require("express");
 const router = express.Router();
-const mealkitUtil = require("../modules/mealkit-util");
 
-router.get("/on-the-menu", (req, res) => {
-    res.render("mealkits/on-the-menu", {
-        title: "Menu",
-        mealsByCat: mealkitUtil.getMealKitsByCategory(),
+router.get("/", (req, res) => {
+    res.render("mealkits/mealkits", {
+        title: "MealKits",
         includeMainCSS: true
     });
 });

@@ -14,6 +14,7 @@ const path = require("path");
 const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 //Set up dotev
 const dotenv = require("dotenv");
@@ -32,6 +33,17 @@ app.use(expressLayouts);
 // Set up body-parser
 app.use(express.urlencoded({ extended: true }));
 
+// Set up express-session
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+    res.locals.user = req.session.user;
+    next();
+});
 // Load the controllers
 const generalController = require("./controllers/generalController");
 const mealkitsController = require("./controllers/mealkitsController");

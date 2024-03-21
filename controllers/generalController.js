@@ -14,6 +14,7 @@ const router = express.Router();
 const mealkitUtil = require("../modules/mealkit-util");
 const validationUtil = require("../modules/validation-util");
 const userModel = require("../models/userModel");
+const bcryptjs = require("bcryptjs");
 
 // Home Page route
 router.get("/", (req, res) => {
@@ -75,9 +76,7 @@ router.post("/sign-up", (req, res) => {
             includeMainCSS: true});
     }
     else{
-        const existingUser = userModel.findOne({ email });
-
-        if (existingUser) {
+        if (userModel.findOne({ email })) {
             validationMessage.email = "This email is already registered. Try a different one, or try logging in."
             res.render("general/sign-up", {
                 title: "Sign up",
@@ -168,14 +167,59 @@ router.post("/log-in", (req, res) => {
             includeMainCSS: true});
     }
     else{
-        res.render("general/welcome", {
-            title: "Welcome",
-            values: {
-                firstName: "",
-                lastName: "",
-            },
-            includeMainCSS: true});
+        userModel.findOne({ email })
+        .then(user => {
+            if(user) {
+                bcryptjs.compare(password, user.password)
+                .then(matched => {
+                    if(matched) {
+                        req.session.user = user;
+                        console.log("User signed in");
+
+                        // res.render("general/welcome", {
+                        //     title: "Welcome",
+                        //     values: {
+                        //         firstName: user.firstName,
+                        //         lastName: user.lastName,
+                        //     },
+                        //     includeMainCSS: true});
+
+                        res.redirect('/');
+                    }
+                    else{
+                        validationMessage.password = "Incorrect password."
+                        res.render("general/log-in", {
+                            title: "Login",
+                            validationMessage,
+                            values: req.body,
+                            includeMainCSS: true});
+                    }
+                })
+            }
+            else{
+                validationMessage.email = "Invalid email address."
+                        res.render("general/log-in", {
+                            title: "Login",
+                            validationMessage,
+                            values: req.body,
+                            includeMainCSS: true});
+            }
+        })
+        .catch(err => {
+            console.log("Unable to query the database: " + err);
+        })
+
+        
     }
+});
+
+// On The Menu Page route
+router.get("/on-the-menu", (req, res) => {
+    res.render("general/on-the-menu", {
+        title: "Menu",
+        mealsByCat: mealkitUtil.getMealKitsByCategory(),
+        includeMainCSS: true
+    });
 });
 
 // Welcome Page route
