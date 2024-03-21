@@ -13,8 +13,6 @@
 const path = require("path");
 const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
-const mealkitUtil = require("./modules/mealkit-util");
-const validationUtil = require("./modules/validation-util");
 const mongoose = require("mongoose");
 
 //Set up dotev
