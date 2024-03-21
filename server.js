@@ -44,12 +44,15 @@ app.use((req, res, next) => {
     res.locals.user = req.session.user;
     next();
 });
+
 // Load the controllers
 const generalController = require("./controllers/generalController");
 const mealkitsController = require("./controllers/mealkitsController");
 
 app.use("/", generalController);
 app.use("/mealkits/", mealkitsController);
+
+
 
 // This use() will not allow requests to go beyond it
 // so we place it at the end of the file, after the other routes.

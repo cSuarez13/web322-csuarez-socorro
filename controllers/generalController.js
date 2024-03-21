@@ -175,6 +175,7 @@ router.post("/log-in", (req, res) => {
                 .then(matched => {
                     if(matched) {
                         req.session.user = user;
+                        req.session.role = role;
                         console.log("User signed in");
 
                         if(role === "clerk"){
@@ -230,13 +231,23 @@ router.get("/welcome", (req, res) => {
         includeMainCSS: true});
 });
 
+
 // Customer route
 router.get("/cart", (req, res) => {
-    try{
-        res.send("Hello, customer.");}
-    catch (error) {
-        console.log(error);
+    if (req.session.user && req.session.role === "customer") {
+        res.send("Hello, customer.");
+    } else {
+        res.status(401).render("general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
     }
+});
+
+router.get("/error", (req, res) => {
+    res.render('general/error');
 });
 
 // LogOut route

@@ -1,0 +1,12 @@
+<% if (typeof message === "string" && message.length > 0) { %>
+    <h3 style="color: red;"><%= message %></h3>
+<% } %>
+<% if (user) { %>
+    <% if (role !== "clerk") { %>
+        <h3 style="color: rgb(255, 115, 0);">You are not a Data Entry Clerk.</h3>
+    <% } else if (role !== "customer"){ %>
+            <h3 style="color: rgb(255, 115, 0);">You are not a Customer.</h3>
+    <% } %>
+<% } else { %>
+        <h3 style="color: rgb(255, 115, 0);">You are not logged in.</h3>
+<% } %>

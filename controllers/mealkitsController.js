@@ -13,7 +13,17 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/list", (req, res) => {
-    res.send("Hello, clerk");
+    if(req.session.user && req.session.role === "clerk"){
+        res.send("Hello, clerk.");
+    }
+    else{
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
 });
 
 module.exports = router;
