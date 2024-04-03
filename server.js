@@ -48,9 +48,11 @@ app.use((req, res, next) => {
 // Load the controllers
 const generalController = require("./controllers/generalController");
 const mealkitsController = require("./controllers/mealkitsController");
+const loadDataController = require("./controllers/loadDataController");
 
 app.use("/", generalController);
 app.use("/mealkits/", mealkitsController);
+app.use("/load-data/", loadDataController);
 
 
 

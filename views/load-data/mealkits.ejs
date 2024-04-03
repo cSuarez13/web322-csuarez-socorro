@@ -1,0 +1,7 @@
+<% if (success === "true") { %>
+    <h3 style="color: rgb(30, 255, 0);">Success! Added meal kits to the database.</h3>
+<% } else if (success === "error"){ %>
+        <h3 style="color: rgb(255, 0, 0);">Couldn't insert the documents: <%= error  %></h3>
+<% } else if (success === "already loaded"){ %>
+    <h3 style="color: rgb(255, 145, 0);">Meal kits have already been added to the database</h3>
+<% } %>

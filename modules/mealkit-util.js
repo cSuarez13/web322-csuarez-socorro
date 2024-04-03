@@ -9,12 +9,11 @@
 * Course/Section: WEB322/NEE
 *
 **************************************************************************************/
-let mealkits = [
+module.exports.mealkits = [
     {
         title: "Vegetarian Avocado-Lime Tacos",
         includes: "Beans, tomatoes, pepper, onions, avocado, lime.",
         description: "Beans, diced tomatoes, sautéed bell peppers and onions, avocado slices, lime crema.",
-        category: "Vegetarian",
         price: 8.99,
         cookingTime: 25,
         servings: 2,
@@ -46,7 +45,7 @@ let mealkits = [
     },
     {
         title: "Chicken Fajita Tacos",
-        inludes: "Chicken, pepper, onions, sour cream.",
+        includes: "Chicken, pepper, onions, sour cream.",
         description: "Grilled chicken strips, bell peppers, onions, flour tortillas, sour cream, salsa.",
         price: 9.99,
         cookingTime: 30,
@@ -80,7 +79,7 @@ let mealkits = [
 ];
 
 module.exports.getAllMealKits = function () {
-    return mealkits;
+    return this.mealkits;
 };
 
 module.exports.getFeaturedMealKits = function (mealkits) {
@@ -95,7 +94,7 @@ module.exports.getFeaturedMealKits = function (mealkits) {
     return filtered;
 };
 
-module.exports.getMealKitsByCategory = function (mealkitsArr = mealkits) {
+module.exports.getMealKitsByCategory = function (mealkitsArr = this.mealkits) {
     if (!mealkitsArr || mealkitsArr.length === 0) {
         return [];
     }
