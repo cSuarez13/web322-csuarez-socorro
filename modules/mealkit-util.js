@@ -95,15 +95,15 @@ module.exports.getFeaturedMealKits = function (mealkits) {
     return filtered;
 };
 
-module.exports.getMealKitsByCategory = function () {
-    if (!mealkits || mealkits.length === 0) {
+module.exports.getMealKitsByCategory = function (mealkitsArr = mealkits) {
+    if (!mealkitsArr || mealkitsArr.length === 0) {
         return [];
     }
 
-    let categories = [...new Set(mealkits.map(meal => meal.category))];
+    let categories = [...new Set(mealkitsArr.map(meal => meal.category))];
 
     let ordered = categories.map(category => {
-        const categoryMealKits = mealkits.filter(meal => meal.category === category);
+        const categoryMealKits = mealkitsArr.filter(meal => meal.category === category);
 
         return {
             categoryName: category,
