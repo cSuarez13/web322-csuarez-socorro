@@ -15,6 +15,7 @@ const mealkitUtil = require("../modules/mealkit-util");
 const validationUtil = require("../modules/validation-util");
 const userModel = require("../models/userModel");
 const bcryptjs = require("bcryptjs");
+const mealkitModel = require("../models/mealkitModel");
 
 router.use((req, res, next) => {
     res.locals.role = req.session.role;
@@ -23,11 +24,18 @@ router.use((req, res, next) => {
 
 // Home Page route
 router.get("/", (req, res) => {
-    res.render("general/home", {
-        title: "Home Page",
-        allMeals: mealkitUtil.getAllMealKits(),
-        includeMainCSS: false,
-    });
+    mealkitModel.find()
+        .then(data => {
+            let mealkits = data.map(value => value.toObject());
+            res.render("general/home", {
+                title: "Home Page",
+                allMeals: mealkitUtil.getFeaturedMealKits(mealkits),
+                includeMainCSS: false,
+            });
+        })
+        .catch((err) => {
+            res.send("Couldn't get list of mealkits" + err);
+        });
 });
 
 // Register Page route

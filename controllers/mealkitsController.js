@@ -12,6 +12,7 @@
 const express = require("express");
 const router = express.Router();
 const mealkitUtil = require("../modules/mealkit-util");
+const mealkitModel = require("../models/mealkitModel");
 
 // On The Menu Page route
 router.get("/on-the-menu", (req, res) => {
@@ -24,9 +25,23 @@ router.get("/on-the-menu", (req, res) => {
 
 router.get("/list", (req, res) => {
     if(req.session.user && req.session.role === "clerk"){
-        res.render("mealkits/list", {
-            user: req.session.user,
-            layout: "layouts/main"
+        mealkitModel.find()
+        .then(data => {
+            let mealkits = data.map(value => value.toObject());
+
+            const sortedMeals = mealkits.sort((a, b) => {
+                return a.title.localeCompare(b.title);
+              });
+
+            res.render("mealkits/list", {
+                user: req.session.user,
+                meals: sortedMeals,
+                layout: "layouts/main"
+            });
+        })
+        .catch((err) => {
+            console.log("Couldn't get list of mealkits" + err);
+            res.redirect("/");
         });
     }
     else{
