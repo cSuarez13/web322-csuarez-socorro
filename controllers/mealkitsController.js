@@ -16,11 +16,19 @@ const mealkitModel = require("../models/mealkitModel");
 
 // On The Menu Page route
 router.get("/on-the-menu", (req, res) => {
-    res.render("mealkits/on-the-menu", {
-        title: "Menu",
-        mealsByCat: mealkitUtil.getMealKitsByCategory(),
-        includeMainCSS: true
-    });
+    mealkitModel.find()
+        .then(data => {
+            let mealkits = data.map(value => value.toObject());
+            res.render("mealkits/on-the-menu", {
+                title: "Menu",
+                mealsByCat: mealkitUtil.getMealKitsByCategory(mealkits),
+                includeMainCSS: true
+            });
+        })
+        .catch((err) => {
+            console.log("Couldn't get list of mealkits" + err);
+            res.redirect("/");
+        });
 });
 
 router.get("/list", (req, res) => {
@@ -53,5 +61,41 @@ router.get("/list", (req, res) => {
         });
     }
 });
+
+router.get('/remove/:id', (req, res) => {
+    const mealKitId = req.params.id;
+    mealkitModel.findById(mealKitId)
+    .then(data => {
+        let mealkit = data.toObject();;
+
+        res.render("../views/mealkits/confirmation", {
+            user: req.session.user,
+            ID: mealKitId,
+            title: mealkit.title,
+            layout: "layouts/main"
+        });
+    })
+    .catch((err) => {
+        console.log("Couldn't find mealkit" + err);
+        res.redirect("/");
+    });
+
+});
+
+router.post('/remove/:id', (req, res) => {
+    const mealKitId = req.params.id;
+    mealkitModel.deleteOne({
+        mealKitId
+    })
+        .then(() => {
+            console.log("Deleted the document for: " + mealKitId);
+            res.redirect("/mealkits/list");
+        })
+        .catch(err => {
+            console.log("Couldn't delete the document for: " + mealKitId + "\n" + err);
+            res.redirect("/");
+        });
+  });
+  
 
 module.exports = router;

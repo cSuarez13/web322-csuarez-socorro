@@ -82,7 +82,7 @@ module.exports.getAllMealKits = function () {
     return this.mealkits;
 };
 
-module.exports.getFeaturedMealKits = function (mealkits) {
+module.exports.getFeaturedMealKits = function (mealkits = this.mealkits) {
     let filtered = [];
 
     for (let i = 0; i < mealkits.length; i++) {
