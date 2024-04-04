@@ -84,9 +84,9 @@ router.get('/remove/:id', (req, res) => {
 
 router.post('/remove/:id', (req, res) => {
     const mealKitId = req.params.id;
-    mealkitModel.deleteOne({
-        mealKitId
-    })
+    mealkitModel.deleteOne(
+        { _id: mealKitId }
+    )
         .then(() => {
             console.log("Deleted the document for: " + mealKitId);
             res.redirect("/mealkits/list");
