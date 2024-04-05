@@ -14,6 +14,7 @@ const router = express.Router();
 const mealkitUtil = require("../modules/mealkit-util");
 const mealkitModel = require("../models/mealkitModel");
 const path = require("path");
+const fs = require("fs");
 
 // On The Menu Page route
 router.get("/on-the-menu", (req, res) => {
@@ -91,20 +92,33 @@ router.get('/remove/:id', (req, res) => {
     }
 });
 
-router.post('/remove/:id', (req, res) => {
+router.post('/remove/:id', async (req, res) => {
     if(req.session.user && req.session.role === "clerk"){
     const mealKitId = req.params.id;
-    mealkitModel.deleteOne(
-        { _id: mealKitId }
-    )
-        .then(() => {
-            console.log("Deleted the document for: " + mealKitId);
-            res.redirect("/mealkits/list");
-        })
-        .catch(err => {
-            console.log("Couldn't delete the document for: " + mealKitId + "\n" + err);
-            res.redirect("/");
-        });
+    try {
+        // Fetch the document from the database to get the imageUrl
+        const mealKit = await mealkitModel.findById(mealKitId);
+        if (!mealKit) {
+            return res.status(404).send("Meal kit not found");
+        }
+
+        await mealkitModel.deleteOne({ _id: mealKitId });
+
+        // Delete the associated image file
+        const imagePath = `assets/${mealKit.imageUrl}`; 
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+            console.log("Deleted image file for meal kit: " + mealKitId);
+        } else {
+            console.log("Image file not found for meal kit: " + mealKitId);
+        }
+
+        console.log("Deleted the document for: " + mealKitId);
+        res.redirect("/mealkits/list");
+    } catch (err) {
+        console.log("Couldn't delete the document for: " + mealKitId + "\n" + err);
+        res.redirect("/");
+    }
     }else{
         res.status(401).render("../views/general/error", {
             message: "You are not authorized to view this page.",
