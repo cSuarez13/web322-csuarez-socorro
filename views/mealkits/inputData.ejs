@@ -10,7 +10,7 @@
                     <h1 class="text-6xl font-bold text-green-500">Meal Kit</h1>
                 </div>
 
-                <form id="logInForm" method="post" action="/mealkits/add" enctype="multipart/form-data">  
+                <form id="logInForm" method="post" <% if (values.button == 'Add') { %> action="/mealkits/add" <% } else if (values.button == 'Update') { %> action="/mealkits/edit/<%= ID %>" <% } %> enctype="multipart/form-data">  
                     <label class="text-green-800 text-3xl" for="title">Title:</label>
                     <input
                         class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
@@ -23,9 +23,10 @@
                         type="text" placeholder="Enter meal ingredients" name="includes" id="includes" value="<%= values.includes %>" required>
                     <label class="mt-2 text-green-800 text-3xl" for="description">Description:</label>
                     <textarea
-                        class="shadow appearance-none border mb-0 w-full py-3 px-4 text-2xl text-gray-800 
+                        class="shadow appearance-none border  mb-0 w-full py-3 px-4 text-2xl text-gray-800 text-left
                         leading-tight focus:outline-none focus:shadow-outline"
-                        name="description" id="description" value="<%= values.description %>" required>
+                        name="description" id="description" rows="3" required>
+                        <%= values.description %>
                     </textarea>
                     
                     <label class="text-green-800 text-3xl" for="category">Category:</label>
@@ -38,7 +39,7 @@
                     <input
                         class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
                         leading-tight focus:outline-none focus:shadow-outline"
-                        type="number" step="0.05" min="0.01" placeholder="Enter meal price" name="price" id="price" value="<%= values.price %>" required>       
+                        type="number" step="0.01" min="0.01" placeholder="Enter meal price" name="price" id="price" value="<%= values.price %>" required>       
                         
                     <label class="text-green-800 text-3xl" for="cookingTime">Cooking Time:</label>
                     <input 
@@ -55,7 +56,7 @@
                     <label class="text-green-800 text-3xl" for="image">Upload a picture:</label>
                     <input 
                         class="border border-black bg-white shadow-md text-gray-700 rounded py-2 px-4 block w-full appearance-none leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                        type="file" name="image" id="image" accept=".jpg, .jpeg, .gif, .png" required>
+                        type="file" name="image" id="image" accept=".jpg, .jpeg, .gif, .png" <% if (!values.imageUrl) { %> required <% } %>>
                     
                     <div class="flex justify-center items-center mt-3">
                         <input class="h-6 w-6 rounded border-gray-300 focus:ring-indigo-500 text-green-600 focus:border-indigo-500" type="checkbox" name="featuredMealKit" id="featuredMealKit" <% if(values.feature) { %> checked <% }%> >

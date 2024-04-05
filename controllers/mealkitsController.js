@@ -99,17 +99,88 @@ router.post('/remove/:id', (req, res) => {
   });
   
   router.get('/edit/:id', (req, res) => {
-    
+    const mealKitId = req.params.id;
+    mealkitModel.findById(mealKitId)
+    .then(data => {
+        let mealkit = data.toObject();;
+
+        res.render("mealkits/inputData", {
+            user: req.session.user,
+            ID: mealKitId,
+            values: {
+                title: mealkit.title,
+                includes: mealkit.includes,
+                description: mealkit.description,
+                category: mealkit.category,
+                price: mealkit.price,
+                time: mealkit.cookingTime,
+                servings: mealkit.servings,
+                imageUrl: mealkit.imageUrl,
+                feature: mealkit.featuredMealKit,
+                button: "Update",
+            },
+            includeMainCSS: true
+        });
+    })
+    .catch((err) => {
+        console.log("Couldn't find mealkit" + err);
+        res.redirect("/");
+    });
 
 });
 
 router.post('/edit/:id', (req, res) => {
+    const mealKitId = req.params.id;
+    values = req.body;
+    let { title, includes, description, category, price, time, servings, feature } = req.body;
+    let imageURL;
+    const picFile = (req.files) ? req.files.image : null;
+
+    if (picFile) {
+        const uniqueName = `im-${title}${path.parse(picFile.name).ext}`;
+        picFile.mv(`assets/images/${uniqueName}`)
+            .then(() => {
+                imageURL = `/images/${uniqueName}`
+                const updatedMeal = {
+                    title, includes, description, category, price, time, servings, imageUrl: imageURL, feature
+                };
     
+                mealkitModel.findOneAndUpdate({ _id: mealKitId }, updatedMeal)
+                    .then(() => {
+                        console.log("Updated meal document for: " + title);
+                        res.redirect("/mealkits/list");
+                    })
+                    .catch(err => {
+                        console.log("Couldn't update meal document for: " + title + "\n" + err);
+                        res.redirect("/");
+                    });
+            })
+            .catch (err => {
+                console.log("Couldn't move image for " + title + "\n" + err);
+                res.redirect("/")
+            });
+    }
+    else {
+        imageURL = values.imageUrl;
+        const updatedMeal = {
+            title, includes, description, category, price, time, servings, imageUrl: imageURL, feature
+        };
+
+        mealkitModel.findOneAndUpdate({ _id: mealKitId }, updatedMeal)
+            .then(() => {
+                console.log("Updated meal document for: " + title);
+                res.redirect("/mealkits/list");
+            })
+            .catch(err => {
+                console.log("Couldn't update meal document for: " + title + "\n" + err);
+                res.redirect("/");
+            });
+    }
   });
 
   router.get('/add', (req, res) => {
     res.render("mealkits/inputData", {
-        validationMessage: {},
+        user: req.session.user,
         values: {
             title: "",
             includes: "",
@@ -118,6 +189,7 @@ router.post('/edit/:id', (req, res) => {
             price: "",
             time: "",
             servings: "",
+            imagesUrl: "",
             feature: false,
             button: "Add",
         },
@@ -150,6 +222,7 @@ router.post('/edit/:id', (req, res) => {
             .catch (err => {
                 console.log("Couldn't move image for " + title + "\n" + err);
                 res.render("mealkits/inputData", {
+                    user: req.session.user,
                     validationMessage: {},
                     values: values,
                     includeMainCSS: true
