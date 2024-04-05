@@ -64,6 +64,7 @@ router.get("/list", (req, res) => {
 });
 
 router.get('/remove/:id', (req, res) => {
+    if(req.session.user && req.session.role === "clerk"){
     const mealKitId = req.params.id;
     mealkitModel.findById(mealKitId)
     .then(data => {
@@ -80,10 +81,18 @@ router.get('/remove/:id', (req, res) => {
         console.log("Couldn't find mealkit" + err);
         res.redirect("/");
     });
-
+    } else{
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
 });
 
 router.post('/remove/:id', (req, res) => {
+    if(req.session.user && req.session.role === "clerk"){
     const mealKitId = req.params.id;
     mealkitModel.deleteOne(
         { _id: mealKitId }
@@ -96,9 +105,18 @@ router.post('/remove/:id', (req, res) => {
             console.log("Couldn't delete the document for: " + mealKitId + "\n" + err);
             res.redirect("/");
         });
+    }else{
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
   });
   
   router.get('/edit/:id', (req, res) => {
+    if(req.session.user && req.session.role === "clerk"){
     const mealKitId = req.params.id;
     mealkitModel.findById(mealKitId)
     .then(data => {
@@ -126,10 +144,18 @@ router.post('/remove/:id', (req, res) => {
         console.log("Couldn't find mealkit" + err);
         res.redirect("/");
     });
-
+    }else{
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
 });
 
 router.post('/edit/:id', (req, res) => {
+    if(req.session.user && req.session.role === "clerk"){
     const mealKitId = req.params.id;
     values = req.body;
     let { title, includes, description, category, price, time, servings, feature } = req.body;
@@ -176,9 +202,18 @@ router.post('/edit/:id', (req, res) => {
                 res.redirect("/");
             });
     }
+}else{
+    res.status(401).render("../views/general/error", {
+        message: "You are not authorized to view this page.",
+        user: req.session.user,
+        role: req.session.role,
+        layout: "layouts/main"
+    });
+}
   });
 
   router.get('/add', (req, res) => {
+    if(req.session.user && req.session.role === "clerk"){
     res.render("mealkits/inputData", {
         user: req.session.user,
         values: {
@@ -195,9 +230,18 @@ router.post('/edit/:id', (req, res) => {
         },
         includeMainCSS: true
     });
+}else{
+    res.status(401).render("../views/general/error", {
+        message: "You are not authorized to view this page.",
+        user: req.session.user,
+        role: req.session.role,
+        layout: "layouts/main"
+    });
+}
   });
   
   router.post('/add', (req, res) => {
+    if(req.session.user && req.session.role === "clerk"){
     let values = req.body;
     let { title, includes, description, category, price, time, servings, feature } = req.body;
 
@@ -228,6 +272,14 @@ router.post('/edit/:id', (req, res) => {
                     includeMainCSS: true
                 });
             });
+        }else{
+            res.status(401).render("../views/general/error", {
+                message: "You are not authorized to view this page.",
+                user: req.session.user,
+                role: req.session.role,
+                layout: "layouts/main"
+            });
+        }
     });
 
 module.exports = router;
