@@ -1,0 +1,68 @@
+<body>
+    <div class="min-h-screen flex flex-col mt-20 justify-center sm:px-5">
+        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-amber-500 to-lime-400 shadow-lg transform -skew-y-6 
+                sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+            </div>
+            <div class="text-white relative px-6 py-12 bg-gradient-to-l from-amber-300 to-white shadow-lg sm:rounded-3xl sm:p-20">
+                <div class="text-center pb-8">
+                    <h1 class="text-6xl font-bold text-green-500">Meal Kit</h1>
+                </div>
+
+                <form id="logInForm" method="post" action="/mealkits/add">  
+                    <label class="text-green-800 text-3xl" for="title">Title:</label>
+                    <input
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            leading-tight focus:outline-none focus:shadow-outline"
+                            type="text" placeholder="Enter meal title" name="title" id="title" value="<%= values.title %>" required>
+                    <label class="mt-2 text-green-800 text-3xl" for="includes">Includes:</label>
+                    <input
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            leading-tight focus:outline-none focus:shadow-outline"
+                            type="text" placeholder="Enter meal ingredients" name="includes" id="includes" value="<%= values.includes %>" required>
+                    <label class="mt-2 text-green-800 text-3xl" for="description">Description:</label>
+                    <textarea
+                            class="shadow appearance-none border mb-0 w-full py-3 px-4 text-2xl text-gray-800 
+                            leading-tight focus:outline-none focus:shadow-outline"
+                            name="description" id="description" value="<%= values.description %>" required>
+                        </textarea>
+                    <label class="mt-2 text-green-800 text-3xl" for="category">Category:</label>
+                    <input
+                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                            leading-tight focus:outline-none focus:shadow-outline"
+                            type="category" placeholder="Enter meal category" name="category" id="category" value="<%= values.category %>" required>
+                            <label class="mt-2 text-green-800 text-3xl" for="price">Price:</label>
+                            <input
+                                    class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                                    leading-tight focus:outline-none focus:shadow-outline"
+                                    type="number" step="0.05" min="0.01" placeholder="Enter meal price" name="price" id="price" value="<%= values.price %>" required>       
+                                    <label class="text-green-800 text-3xl" for="cookingTime">Cooking Time:</label>
+                                    <input class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                                                    leading-tight focus:outline-none focus:shadow-outline"
+                                            type="number" step="1" min="1" placeholder="Enter cooking time in minutes" name="cookingTime" id="cookingTime" value="<%= values.time %>" required>
+                    
+                                            <label class="text-green-800 text-3xl" for="servings">Servings:</label>
+                                            <input class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                                                            leading-tight focus:outline-none focus:shadow-outline"
+                                                    type="number" step="1" min="1" placeholder="Enter servings" name="servings" id="servings" value="<%= values.servings %>" required>
+                    
+                    <div class="flex justify-center items-center mt-3">
+                        <input class="h-6 w-6 rounded border-gray-300 focus:ring-indigo-500 text-green-600 focus:border-indigo-500" type="checkbox" name="featuredMealKit" id="featuredMealKit" <% if(values.feature) { %> checked <% }%> >
+                        <label class="ml-3 text-green-800 text-3xl" for="featuredMealKit">Featured Meal Kit</label>
+                    </div>
+                                                    
+                    <div>
+                        <button type="submit"
+                            class="mt-6 flex w-full justify-center rounded-md border border-transparent 
+                            bg-green-500 py-3 px-6 font-semibold text-3xl text-white shadow-lg 
+                            hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 
+                            focus:ring-offset-2"><%= values.button %> 
+                        </button>
+                    </div>
+    
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

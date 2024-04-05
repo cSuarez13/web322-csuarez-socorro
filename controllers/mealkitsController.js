@@ -97,5 +97,47 @@ router.post('/remove/:id', (req, res) => {
         });
   });
   
+  router.get('/edit/:id', (req, res) => {
+    
+
+});
+
+router.post('/edit/:id', (req, res) => {
+    
+  });
+
+  router.get('/add', (req, res) => {
+    res.render("mealkits/inputData", {
+        validationMessage: {},
+        values: {
+            title: "",
+            includes: "",
+            description: "",
+            category: "",
+            price: "",
+            time: "",
+            servings: "",
+            feature: false,
+            button: "Add",
+        },
+        includeMainCSS: true
+    });
+  });
+  
+  router.post('/add', (req, res) => {
+      let { title, includes, description, category, price, time, servings, feature } = req.body;
+
+      const newMeal = new mealkitModel ({ title, includes, description, category, price, time, servings, feature });
+
+      newMeal.save()
+        .then(() => {
+            console.log("Created a meal document for: " + title);
+            res.redirect("/mealkits/list");
+        })
+        .catch(err => {
+            console.log("Couldn't create a meal document for: " + title + "\n" + err);
+            res.redirect("/");
+        });
+    });
 
 module.exports = router;
