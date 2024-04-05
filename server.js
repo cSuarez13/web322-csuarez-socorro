@@ -9,12 +9,12 @@
 * Course/Section: WEB322/NEE
 *
 **************************************************************************************/
-
 const path = require("path");
 const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require("mongoose");
 const session = require("express-session");
+const fileUpload = require("express-fileupload");
 
 //Set up dotev
 const dotenv = require("dotenv");
@@ -29,6 +29,9 @@ app.use(express.static(path.join(__dirname, "/assets")));
 app.set("view engine", "ejs");
 app.set("layout", "layouts/main");
 app.use(expressLayouts);
+
+// Set up express-fileupload.
+app.use(fileUpload());
 
 // Set up body-parser
 app.use(express.urlencoded({ extended: true }));

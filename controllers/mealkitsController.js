@@ -13,6 +13,7 @@ const express = require("express");
 const router = express.Router();
 const mealkitUtil = require("../modules/mealkit-util");
 const mealkitModel = require("../models/mealkitModel");
+const path = require("path");
 
 // On The Menu Page route
 router.get("/on-the-menu", (req, res) => {
@@ -125,19 +126,35 @@ router.post('/edit/:id', (req, res) => {
   });
   
   router.post('/add', (req, res) => {
-      let { title, includes, description, category, price, time, servings, feature } = req.body;
+    let values = req.body;
+    let { title, includes, description, category, price, time, servings, feature } = req.body;
 
-      const newMeal = new mealkitModel ({ title, includes, description, category, price, time, servings, feature });
+    const picFile = req.files.image;
+    const uniqueName = `im-${title}${path.parse(picFile.name).ext}`;
+    picFile.mv(`assets/images/${uniqueName}`)
+            .then(() => {
+                const imageURL = `/images/${uniqueName}`
 
-      newMeal.save()
-        .then(() => {
-            console.log("Created a meal document for: " + title);
-            res.redirect("/mealkits/list");
-        })
-        .catch(err => {
-            console.log("Couldn't create a meal document for: " + title + "\n" + err);
-            res.redirect("/");
-        });
+                const newMeal = new mealkitModel ({ title, includes, description, category, price, time, servings, imageUrl: imageURL, feature });
+
+                newMeal.save()
+                    .then(() => {
+                        console.log("Created a meal document for: " + title);
+                        res.redirect("/mealkits/list");
+                    })
+                    .catch(err => {
+                        console.log("Couldn't create a meal document for: " + title + "\n" + err);
+                        res.redirect("/");
+                    });
+                })
+            .catch (err => {
+                console.log("Couldn't move image for " + title + "\n" + err);
+                res.render("mealkits/inputData", {
+                    validationMessage: {},
+                    values: values,
+                    includeMainCSS: true
+                });
+            });
     });
 
 module.exports = router;

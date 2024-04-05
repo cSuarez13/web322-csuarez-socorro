@@ -10,42 +10,52 @@
                     <h1 class="text-6xl font-bold text-green-500">Meal Kit</h1>
                 </div>
 
-                <form id="logInForm" method="post" action="/mealkits/add">  
+                <form id="logInForm" method="post" action="/mealkits/add" enctype="multipart/form-data">  
                     <label class="text-green-800 text-3xl" for="title">Title:</label>
                     <input
-                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
-                            leading-tight focus:outline-none focus:shadow-outline"
-                            type="text" placeholder="Enter meal title" name="title" id="title" value="<%= values.title %>" required>
+                        class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        type="text" placeholder="Enter meal title" name="title" id="title" value="<%= values.title %>" required >
                     <label class="mt-2 text-green-800 text-3xl" for="includes">Includes:</label>
                     <input
-                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
-                            leading-tight focus:outline-none focus:shadow-outline"
-                            type="text" placeholder="Enter meal ingredients" name="includes" id="includes" value="<%= values.includes %>" required>
+                        class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        type="text" placeholder="Enter meal ingredients" name="includes" id="includes" value="<%= values.includes %>" required>
                     <label class="mt-2 text-green-800 text-3xl" for="description">Description:</label>
                     <textarea
-                            class="shadow appearance-none border mb-0 w-full py-3 px-4 text-2xl text-gray-800 
-                            leading-tight focus:outline-none focus:shadow-outline"
-                            name="description" id="description" value="<%= values.description %>" required>
-                        </textarea>
-                    <label class="mt-2 text-green-800 text-3xl" for="category">Category:</label>
-                    <input
-                            class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
-                            leading-tight focus:outline-none focus:shadow-outline"
-                            type="category" placeholder="Enter meal category" name="category" id="category" value="<%= values.category %>" required>
-                            <label class="mt-2 text-green-800 text-3xl" for="price">Price:</label>
-                            <input
-                                    class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
-                                    leading-tight focus:outline-none focus:shadow-outline"
-                                    type="number" step="0.05" min="0.01" placeholder="Enter meal price" name="price" id="price" value="<%= values.price %>" required>       
-                                    <label class="text-green-800 text-3xl" for="cookingTime">Cooking Time:</label>
-                                    <input class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
-                                                    leading-tight focus:outline-none focus:shadow-outline"
-                                            type="number" step="1" min="1" placeholder="Enter cooking time in minutes" name="cookingTime" id="cookingTime" value="<%= values.time %>" required>
+                        class="shadow appearance-none border mb-0 w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        name="description" id="description" value="<%= values.description %>" required>
+                    </textarea>
                     
-                                            <label class="text-green-800 text-3xl" for="servings">Servings:</label>
-                                            <input class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
-                                                            leading-tight focus:outline-none focus:shadow-outline"
-                                                    type="number" step="1" min="1" placeholder="Enter servings" name="servings" id="servings" value="<%= values.servings %>" required>
+                    <label class="text-green-800 text-3xl" for="category">Category:</label>
+                    <input
+                        class="shadow appearance-none border border-black rounded w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        type="category" placeholder="Enter meal category" name="category" id="category" value="<%= values.category %>" required>
+                    
+                    <label class="mt-2 text-green-800 text-3xl" for="price">Price:</label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        type="number" step="0.05" min="0.01" placeholder="Enter meal price" name="price" id="price" value="<%= values.price %>" required>       
+                        
+                    <label class="text-green-800 text-3xl" for="cookingTime">Cooking Time:</label>
+                    <input 
+                        class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        type="number" step="1" min="1" placeholder="Enter cooking time in minutes" name="cookingTime" id="cookingTime" value="<%= values.time %>" required>
+                    
+                    <label class="text-green-800 text-3xl" for="servings">Servings:</label>
+                    <input 
+                        class="shadow appearance-none border rounded w-full py-3 px-4 text-2xl text-gray-800 
+                        leading-tight focus:outline-none focus:shadow-outline"
+                        type="number" step="1" min="1" placeholder="Enter servings" name="servings" id="servings" value="<%= values.servings %>" required>
+                    
+                    <label class="text-green-800 text-3xl" for="image">Upload a picture:</label>
+                    <input 
+                        class="border border-black bg-white shadow-md text-gray-700 rounded py-2 px-4 block w-full appearance-none leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                        type="file" name="image" id="image" accept=".jpg, .jpeg, .gif, .png" required>
                     
                     <div class="flex justify-center items-center mt-3">
                         <input class="h-6 w-6 rounded border-gray-300 focus:ring-indigo-500 text-green-600 focus:border-indigo-500" type="checkbox" name="featuredMealKit" id="featuredMealKit" <% if(values.feature) { %> checked <% }%> >

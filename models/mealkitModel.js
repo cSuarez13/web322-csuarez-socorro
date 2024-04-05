@@ -43,7 +43,7 @@ const mealKitSchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        //required: true
+        required: true
     },
     featuredMealKit: {
         type: Boolean,
