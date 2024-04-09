@@ -1,10 +1,16 @@
 <!-- Meal Kit -->
-    <div class="image-container">
-        <img src="<%= meal.imageUrl %>" alt="Meal: <%= meal.title %>">
-    </div>
-    <h3><%= meal.title %></h3>
-    <p><%= meal.description %></p>
-    <button class="button-62" role="button">
-        <p>$<%= meal.price %></p>
-    </button>
+<div class="image-container">
+    <img src="<%= meal.imageUrl %>" alt="Meal: <%= meal.title %>">
+</div>
+<h3 class="font-semibold text-4xl"><%= meal.title %></h3>
+<p><%= meal.description %></p>
+<div class="flex items-center justify-center">
+    <% if (user && role !== "clerk") { %>
+        <p class="text-[#60ff5a] font-semibold mr-80 ml-12">$<%= meal.price %></p>
+        <button class="button-62"><p>Buy</p></button>
+    <% } else { %>
+        <p class="text-[#60ff5a] font-semibold">$<%= meal.price %></p>
+    <% } %>
+</div>
+
 

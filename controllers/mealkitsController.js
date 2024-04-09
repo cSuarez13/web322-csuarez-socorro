@@ -24,7 +24,6 @@ router.get("/on-the-menu", (req, res) => {
             res.render("mealkits/on-the-menu", {
                 title: "Menu",
                 mealsByCat: mealkitUtil.getMealKitsByCategory(mealkits),
-                includeMainCSS: true
             });
         })
         .catch((err) => {
@@ -151,7 +150,6 @@ router.post('/remove/:id', async (req, res) => {
                 feature: mealkit.featuredMealKit,
                 button: "Update",
             },
-            includeMainCSS: true
         });
     })
     .catch((err) => {
@@ -242,7 +240,6 @@ router.post('/edit/:id', (req, res) => {
             feature: false,
             button: "Add",
         },
-        includeMainCSS: true
     });
 }else{
     res.status(401).render("../views/general/error", {

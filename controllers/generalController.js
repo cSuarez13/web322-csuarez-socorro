@@ -30,7 +30,6 @@ router.get("/", (req, res) => {
             res.render("general/home", {
                 title: "Home Page",
                 allMeals: mealkitUtil.getFeaturedMealKits(mealkits),
-                includeMainCSS: false,
             });
         })
         .catch((err) => {
@@ -48,7 +47,6 @@ router.get("/sign-up", (req, res) => {
             lastName: "",
             email: ""
         },
-        includeMainCSS: true
     });
 });
 
@@ -86,8 +84,7 @@ router.post("/sign-up", (req, res) => {
         res.render("general/sign-up", {
             title: "Sign up",
             validationMessage,
-            values: req.body,
-            includeMainCSS: true});
+            values: req.body});
     }
     else{
         userModel.findOne({ email })
@@ -98,7 +95,6 @@ router.post("/sign-up", (req, res) => {
                     title: "Sign up",
                     validationMessage,
                     values: req.body,
-                    includeMainCSS: true
                 });
             } else {
                 const newUser = new userModel({ firstName, lastName, email, password });
@@ -134,8 +130,7 @@ router.post("/sign-up", (req, res) => {
                         res.render("general/sign-up", {
                             title: "Sign Up",
                             validationMessage,
-                            values: req.body,
-                            includeMainCSS: true});
+                            values: req.body});
                     })
                 })
                 .catch(err => {
@@ -144,8 +139,7 @@ router.post("/sign-up", (req, res) => {
                     res.render("general/sign-up", {
                         title: "Sign up",
                         validationMessage,
-                        values: req.body,
-                        includeMainCSS: true});
+                        values: req.body});
                 });
             }
         });
@@ -160,8 +154,7 @@ router.get("/log-in", (req, res) => {
         values: {
             role: "clerk",
             email: ""
-        },
-        includeMainCSS: true});
+        }});
 });
 
 router.post("/log-in", (req, res) => {
@@ -181,8 +174,7 @@ router.post("/log-in", (req, res) => {
         res.render("general/log-in", {
             title: "Login",
             validationMessage,
-            values: req.body,
-            includeMainCSS: true});
+            values: req.body});
     }
     else{
         userModel.findOne({ email })
@@ -206,8 +198,7 @@ router.post("/log-in", (req, res) => {
                         res.render("general/log-in", {
                             title: "Login",
                             validationMessage,
-                            values: req.body,
-                            includeMainCSS: true});
+                            values: req.body});
                     }
                 })
             }
@@ -216,8 +207,7 @@ router.post("/log-in", (req, res) => {
                         res.render("general/log-in", {
                             title: "Login",
                             validationMessage,
-                            values: req.body,
-                            includeMainCSS: true});
+                            values: req.body});
             }
         })
         .catch(err => {
@@ -235,8 +225,7 @@ router.get("/welcome", (req, res) => {
         values: {
             firstName: "",
             lastName: "",
-        },
-        includeMainCSS: true});
+        }});
 });
 
 
