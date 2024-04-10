@@ -68,7 +68,7 @@ router.get('/remove/:id', (req, res) => {
     const mealKitId = req.params.id;
     mealkitModel.findById(mealKitId)
     .then(data => {
-        let mealkit = data.toObject();;
+        let mealkit = data.toObject();
 
         res.render("../views/mealkits/confirmation", {
             user: req.session.user,

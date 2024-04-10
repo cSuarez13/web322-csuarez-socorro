@@ -1,1 +1,95 @@
-<h3 style="color: rgb(0, 255, 13);">Welcome, <%= user.firstName %>.</h3>
+<% if (typeof viewModel.message === "string" && viewModel.message.length > 0) { %>
+    <h3 style="color: rgb(0, 255, 13);"><%= viewModel.message %></h3>
+<% } else {%>
+    <h3 style="color: rgb(0, 255, 13);">Welcome, <%= user.firstName %>.</h3>
+<% } %>
+
+<!-- Horizontal Line -->
+<hr class="fade" />
+<h1 class="text-6xl">Shopping Cart</h1>
+<!-- Horizontal Line -->
+<hr class="fade" />
+<% if (!viewModel.hasItems) { %>
+    <h3 style="color: rgb(255, 60, 0);">The cart is empty.</h3>
+<% } else {%>
+    <div class="overflow-hidden rounded-lg border border-green-200 shadow-md m-12 mt-6">
+        <table class="w-full border-collapse bg-gradient-to-br from-gray-800 to-amber-400 bg-opacity-50 text-left text-2xl text-lime-300">
+        <thead class="bg-gradient-to-br from-lime-500 to-gray-800">
+            <tr>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400"></th>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400">Title</th>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400">Includes</th>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400">Price</th>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400">Quantity</th>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400">Total</th>
+            <th scope="col" class="px-6 py-4 text-3xl text-amber-400"></th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-green-200 border-t border-green-200">
+            <% let subtotal = 0; %>
+            <% viewModel.mealkits.forEach(function(meal) { %>
+                <% subtotal += meal.mealkit.price * meal.qty; %>
+            <tr class="hover:bg-green-200 hover:text-gray-950">
+                <td class="px-6 py-4">
+                    <img src="<%= meal.mealkit.imageUrl %>" alt="<%= meal.title %>" class="h-20 w-20 rounded-full object-cover object-center">
+                </td>
+                <td class="px-6 py-4"><%= meal.mealkit.title %></td>
+                <td class="px-6 py-4"><%= meal.mealkit.includes %></td>
+                <td class="px-6 py-4"><%= meal.mealkit.price %></td>
+                <td class="px-6 py-4"> 
+                    <form action="/update-qty/<%= meal.id %>" method="POST">
+                        <input  
+                            type="number" 
+                            step="1" 
+                            min="1" 
+                            placeholder="<%= meal.qty %>" 
+                            name="qty" 
+                            value="<%= meal.qty %>" 
+                            class="bg-transparent focus:bg-transparent outline-none border-none text-2xl"
+                            onchange="this.form.submit()"s
+                        >
+                    </form>
+                </td>
+                <td class="px-6 py-4"><%= meal.mealkit.price * meal.qty %></td>
+                <td class="px-6 py-4">
+                <button type="button" onclick="window.location.href='/mealkits/remove/<%= meal._id %>'">
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-10 w-10 text-red-900"
+                    x-tooltip="tooltip"
+                    >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    />
+                    </svg>
+                </button>
+            </td>
+            </tr>
+            <% }); %>
+        </tbody>
+        <tfoot class="divide-y divide-green-200 border-t border-green-200">
+            <tr>
+                <td colspan="5" class="px-6 py-4">Subtotal:</td>
+                <td class="px-6 py-4"><%= subtotal.toFixed(2) %></td> 
+            </tr>
+            <tr>
+                <td colspan="5" class="px-6 py-4">Tax (10%):</td>
+                <td class="px-6 py-4"><%= (subtotal * 0.1).toFixed(2) %></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="px-6 py-4">Grand Total:</td>
+                <td class="px-6 py-4"><%= (subtotal * 1.1).toFixed(2) %></td> 
+            </tr>
+        </tfoot>
+        </table>     
+    </div>
+    <form action="/place-order" method="POST">
+        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Place Order</button>
+    </form>
+<% } %>

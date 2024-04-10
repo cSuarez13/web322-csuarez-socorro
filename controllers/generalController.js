@@ -120,10 +120,7 @@ router.post("/sign-up", (req, res) => {
 
                 sgMail.send(msg)
                     .then(() => {
-                        res.render("general/welcome", {
-                            title: "WELCOME",
-                            values: req.body,
-                            includeMainCSS: true});
+                        res.redirect(`/welcome?firstName=${firstName}&lastName=${lastName}`);
                     })
                     .catch(err => {
                         console.log(err);
@@ -220,30 +217,11 @@ router.post("/log-in", (req, res) => {
 
 // Welcome Page route
 router.get("/welcome", (req, res) => {
+    const { firstName, lastName } = req.query;
     res.render("general/welcome", {
-        title: "Welcome",
-        values: {
-            firstName: "",
-            lastName: "",
-        }});
-});
-
-
-// Customer route
-router.get("/cart", (req, res) => {
-    if (req.session.user && req.session.role === "customer") {
-        res.render("general/cart", {
-            user: req.session.user,
-            layout: "layouts/main"
-        });
-    } else {
-        res.status(401).render("general/error", {
-            message: "You are not authorized to view this page.",
-            user: req.session.user,
-            role: req.session.role,
-            layout: "layouts/main"
-        });
-    }
+        title: "WELCOME",
+        firstName: firstName, 
+        lastName: lastName});
 });
 
 router.get("/error", (req, res) => {

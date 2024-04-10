@@ -52,10 +52,12 @@ app.use((req, res, next) => {
 const generalController = require("./controllers/generalController");
 const mealkitsController = require("./controllers/mealkitsController");
 const loadDataController = require("./controllers/loadDataController");
+const cartController = require("./controllers/cartController");
 
 app.use("/", generalController);
 app.use("/mealkits/", mealkitsController);
 app.use("/load-data/", loadDataController);
+app.use("/", cartController);
 
 
 

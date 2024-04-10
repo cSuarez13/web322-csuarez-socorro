@@ -7,7 +7,7 @@
 <div class="flex items-center justify-center">
     <% if (user && role !== "clerk") { %>
         <p class="text-[#60ff5a] font-semibold mr-80 ml-12">$<%= meal.price %></p>
-        <button class="button-62"><p>Buy</p></button>
+        <button class="button-62" onclick="window.location.href='/add-item/<%= meal._id %>'"><p>Buy</p></button>
     <% } else { %>
         <p class="text-[#60ff5a] font-semibold">$<%= meal.price %></p>
     <% } %>
