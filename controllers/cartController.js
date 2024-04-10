@@ -99,6 +99,59 @@ router.post('/update-qty/:id', (req, res) => {
 
 router.post('/place-order', (req, res) => {
     cart = req.session.cart;
+    user = req.session.user;
+
+    const sgMail = require("@sendgrid/mail");
+    sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+
+    let cartDetails = '';
+    let cartSubtotal = 0;
+    cart.forEach(item => {
+        cartDetails += `
+            <p>Meal Kit: ${item.mealkit.title}</p>
+            <p>Includes: ${item.mealkit.includes}</p>
+            <p>Price: ${item.mealkit.price}</p>
+            <p>Quantity: ${item.qty}</p>
+            <p>Total: ${item.mealkit.price * item.qty}</p>
+            <hr>
+        `;
+        cartSubtotal += item.mealkit.price * item.qty;
+    });
+    cartSubtotal = parseFloat(cartSubtotal.toFixed(2)); 
+        let taxes = parseFloat((cartSubtotal * 0.10).toFixed(2)); 
+        let total = parseFloat((cartSubtotal + taxes).toFixed(2));
+    const msg = {
+        to: user.email,
+        from: "clausuarez99@gmail.com",
+        subject: "Your Order Confirmation",
+        html: `
+        <p>Customer: ${user.firstName} ${user.lastName}</p>
+        <p>Order Details:</p>
+        <hr>
+        ${cartDetails}
+        <p>Subtotal: ${cartSubtotal}</p>
+        <p>Taxes: ${taxes}</p>
+        <p>Total: ${total}</p>
+        <hr>
+        <p>Thank you for your order!</p>
+        `
+    };
+
+    sgMail.send(msg)
+        .then(() => {
+            console.log("Email send.")
+            req.session.cart = [];
+            cartUtils.prepareView(req,res, "Order placed successfully");
+        })
+        .catch(err => {
+            console.log(err);
+            res.render("../views/general/error", {
+                message: "An error occurred while processing your order.",
+                user: req.session.user,
+                role: req.session.role,
+                layout: "layouts/main"
+            });
+        })
 })
 
 module.exports = router;
