@@ -16,9 +16,11 @@ const mealkitModel = require("../models/mealkitModel");
 
 // Customer route
 router.get("/cart", (req, res) => {
-    if (req.session.user && req.session.role === "customer") {
+    if (req.session.user && req.session.role === "customer") 
+    {
         cartUtils.prepareView(req,res);
-    } else {
+    } else 
+    {
         res.status(401).render("../views/general/error", {
             message: "You are not authorized to view this page.",
             user: req.session.user,
@@ -29,7 +31,8 @@ router.get("/cart", (req, res) => {
 });
 
 router.get('/add-item/:id', (req, res) => {
-    if (req.session.user && req.session.role === "customer") {
+    if (req.session.user && req.session.role === "customer") 
+    {
         const ID = req.params.id;
         
         mealkitModel.findById(ID)
@@ -71,7 +74,8 @@ router.get('/add-item/:id', (req, res) => {
             res.redirect("/");
         });
 
-    } else {
+    } else 
+    {
         res.status(401).render("../views/general/error", {
             message: "You are not authorized to view this page.",
             user: req.session.user,
@@ -82,92 +86,125 @@ router.get('/add-item/:id', (req, res) => {
 })
 
 router.post('/update-qty/:id', (req, res) => {
-    const mealId = req.params.id;
-    const newQty = parseInt(req.body.qty);
+    if (req.session.user && req.session.role === "customer") 
+    {
+        const mealId = req.params.id;
+        const newQty = parseInt(req.body.qty);
 
-    if (req.session.cart && req.session.cart.length > 0) {
-        const mealIndex = req.session.cart.findIndex(item => item.id === mealId);
+        if (req.session.cart && req.session.cart.length > 0) {
+            const mealIndex = req.session.cart.findIndex(item => item.id === mealId);
 
-        if (mealIndex !== -1) {
-            req.session.cart[mealIndex].qty = newQty;
-            cartUtils.prepareView(req, res, 'Quantity updated successfully');
-        } else {
-            cartUtils.prepareView(req, res, 'Meal not found in cart');
-        }
-    } 
+            if (mealIndex !== -1) {
+                req.session.cart[mealIndex].qty = newQty;
+                cartUtils.prepareView(req, res, 'Quantity updated successfully');
+            } else {
+                cartUtils.prepareView(req, res, 'Meal not found in cart');
+            }
+        } 
+    } else 
+    {
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
 });
 
 router.post('/place-order', (req, res) => {
-    cart = req.session.cart;
-    user = req.session.user;
+    if (req.session.user && req.session.role === "customer") 
+    {
+        cart = req.session.cart;
+        user = req.session.user;
 
-    const sgMail = require("@sendgrid/mail");
-    sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+        const sgMail = require("@sendgrid/mail");
+        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
-    let cartDetails = '';
-    let cartSubtotal = 0;
-    cart.forEach(item => {
-        cartDetails += `
-            <p>Meal Kit: ${item.mealkit.title}</p>
-            <p>Includes: ${item.mealkit.includes}</p>
-            <p>Price: ${item.mealkit.price}</p>
-            <p>Quantity: ${item.qty}</p>
-            <p>Total: ${item.mealkit.price * item.qty}</p>
+        let cartDetails = '';
+        let cartSubtotal = 0;
+        cart.forEach(item => {
+            cartDetails += `
+                <p>Meal Kit: ${item.mealkit.title}</p>
+                <p>Includes: ${item.mealkit.includes}</p>
+                <p>Price: ${item.mealkit.price}</p>
+                <p>Quantity: ${item.qty}</p>
+                <p>Total: ${item.mealkit.price * item.qty}</p>
+                <hr>
+            `;
+            cartSubtotal += item.mealkit.price * item.qty;
+        });
+        cartSubtotal = parseFloat(cartSubtotal.toFixed(2)); 
+            let taxes = parseFloat((cartSubtotal * 0.10).toFixed(2)); 
+            let total = parseFloat((cartSubtotal + taxes).toFixed(2));
+        const msg = {
+            to: user.email,
+            from: "clausuarez99@gmail.com",
+            subject: "Your Order Confirmation",
+            html: `
+            <p>Customer: ${user.firstName} ${user.lastName}</p>
+            <p>Order Details:</p>
             <hr>
-        `;
-        cartSubtotal += item.mealkit.price * item.qty;
-    });
-    cartSubtotal = parseFloat(cartSubtotal.toFixed(2)); 
-        let taxes = parseFloat((cartSubtotal * 0.10).toFixed(2)); 
-        let total = parseFloat((cartSubtotal + taxes).toFixed(2));
-    const msg = {
-        to: user.email,
-        from: "clausuarez99@gmail.com",
-        subject: "Your Order Confirmation",
-        html: `
-        <p>Customer: ${user.firstName} ${user.lastName}</p>
-        <p>Order Details:</p>
-        <hr>
-        ${cartDetails}
-        <p>Subtotal: ${cartSubtotal}</p>
-        <p>Taxes: ${taxes}</p>
-        <p>Total: ${total}</p>
-        <hr>
-        <p>Thank you for your order!</p>
-        `
-    };
+            ${cartDetails}
+            <p>Subtotal: ${cartSubtotal}</p>
+            <p>Taxes: ${taxes}</p>
+            <p>Total: ${total}</p>
+            <hr>
+            <p>Thank you for your order!</p>
+            `
+        };
 
-    sgMail.send(msg)
-        .then(() => {
-            console.log("Email send.")
-            req.session.cart = [];
-            cartUtils.prepareView(req,res, "Order placed successfully");
-        })
-        .catch(err => {
-            console.log(err);
-            res.render("../views/general/error", {
-                message: "An error occurred while processing your order.",
-                user: req.session.user,
-                role: req.session.role,
-                layout: "layouts/main"
-            });
-        })
+        sgMail.send(msg)
+            .then(() => {
+                console.log("Email send.")
+                req.session.cart = [];
+                cartUtils.prepareView(req,res, "Order placed successfully");
+            })
+            .catch(err => {
+                console.log(err);
+                res.render("../views/general/error", {
+                    message: "An error occurred while processing your order.",
+                    user: req.session.user,
+                    role: req.session.role,
+                    layout: "layouts/main"
+                });
+            })
+    } else 
+    {
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
 })
 
 router.get('/remove/:id', (req, res) => {
-    const mealId = req.params.id;
+    if (req.session.user && req.session.role === "customer") 
+    {
+        const mealId = req.params.id;
 
-    if (req.session.cart && req.session.cart.length > 0) {
-        const mealIndex = req.session.cart.findIndex(item => item.id === mealId);
-        let cart = req.session.cart || [];
-        if (mealIndex !== -1) {
-            let message = `Removed "${cart[mealIndex].mealkit.title}" from the cart.`
-            cart.splice(mealIndex, 1);
-            cartUtils.prepareView(req, res, message);
-        } else {
-            cartUtils.prepareView(req, res, 'Meal not found in cart');
-        }
-    } 
+        if (req.session.cart && req.session.cart.length > 0) {
+            const mealIndex = req.session.cart.findIndex(item => item.id === mealId);
+            let cart = req.session.cart || [];
+            if (mealIndex !== -1) {
+                let message = `Removed "${cart[mealIndex].mealkit.title}" from the cart.`
+                cart.splice(mealIndex, 1);
+                cartUtils.prepareView(req, res, message);
+            } else {
+                cartUtils.prepareView(req, res, 'Meal not found in cart');
+            }
+        } 
+    } else 
+    {
+        res.status(401).render("../views/general/error", {
+            message: "You are not authorized to view this page.",
+            user: req.session.user,
+            role: req.session.role,
+            layout: "layouts/main"
+        });
+    }
 });
 
 module.exports = router;
