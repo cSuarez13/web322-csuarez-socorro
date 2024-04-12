@@ -154,4 +154,20 @@ router.post('/place-order', (req, res) => {
         })
 })
 
+router.get('/remove/:id', (req, res) => {
+    const mealId = req.params.id;
+
+    if (req.session.cart && req.session.cart.length > 0) {
+        const mealIndex = req.session.cart.findIndex(item => item.id === mealId);
+        let cart = req.session.cart || [];
+        if (mealIndex !== -1) {
+            let message = `Removed "${cart[mealIndex].mealkit.title}" from the cart.`
+            cart.splice(mealIndex, 1);
+            cartUtils.prepareView(req, res, message);
+        } else {
+            cartUtils.prepareView(req, res, 'Meal not found in cart');
+        }
+    } 
+});
+
 module.exports = router;
